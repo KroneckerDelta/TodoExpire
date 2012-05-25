@@ -1,0 +1,49 @@
+Änderung in der POM:
+
+Im Profil von checkstyle:
+
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+
+// hier einfügen                   
+
+						<dependencies>
+						 <dependency>
+							<groupId>de.mic.checkstyle.rule</groupId>
+							<artifactId>TodoExpireCheck</artifactId>
+							<version>0.9</version>
+						  </dependency>
+						</dependencies> 
+// aber hier alt
+					  
+
+			<configuration>
+                            <encoding>UTF-8</encoding>
+                            <configLocation>../mbn_srv_main/seu/eclipse_templates/mbNeuCheckstyle.xml</configLocation>
+                            <suppressionsLocation>../mbn_srv_main/seu/eclipse_templates/mbNeuCheckstyleSuppressions.xml</suppressionsLocation>
+                            <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
+                        </configuration>
+
+
+
+Dann in der Datei mbNeuCheckstyle.xml
+unter mbn_srv_main/seu/eclipse_templates
+
+Dies Modul einfügen:
+
+ <module name="de.mic.checkstyle.rule.TodoExpireCheck">
+      <property name="days" value="180"/>
+	  <property name="dateformat" value="dd.mm.yyyy"/>
+ </module>
+
+
+Wichtig hierbei, dass das Modul im Modul: 
+<module name="TreeWalker">
+ist.
+
+
+Und Maven muss das Jar für TodoExpireCheck kennen...
+
+
