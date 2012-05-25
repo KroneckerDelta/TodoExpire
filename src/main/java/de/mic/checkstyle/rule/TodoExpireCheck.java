@@ -13,6 +13,8 @@ import com.puppycrawl.tools.checkstyle.api.FileContents;
 import com.puppycrawl.tools.checkstyle.api.TextBlock;
 import com.puppycrawl.tools.checkstyle.checks.TodoCommentCheck;
 
+import de.mic.checkstyle.rule.TodoWithNameAndDateIdentifier.CheckResult;
+
 /**
  * Diese Klasse repräsentiert ein eigenes Checkstyle zum Finden von veralteten Todos.
  * Die Klasse sucht im Quellcode nach dem Regex 'TODO' und überprüft die dahinterliegenden
@@ -27,6 +29,7 @@ import com.puppycrawl.tools.checkstyle.checks.TodoCommentCheck;
  * &lt;module name="de.mic.checkstyle.rule.TodoExpireCheck"&gt;
  * &lt;property name="days" value="180"/&gt;
  * &lt;property name="dateformat" value="dd.mm.yyyy"/&gt;
+ * &lt;property name="mandatory" value="true|false"/&gt;
  * &lt;/module&gt;
  * </pre>
  * 
@@ -35,6 +38,7 @@ public class TodoExpireCheck extends TodoCommentCheck {
 
     private int days = 180;
     private String dateformat = "dd.mm.yyyy";
+    private boolean mandatory = false;
 
     public TodoExpireCheck() {
         super();
@@ -69,18 +73,6 @@ public class TodoExpireCheck extends TodoCommentCheck {
         }
     }
 
-    private void checkOldComment(final TodoWithNameAndDateIdentifier todoIdentifier, final String cmt,
-            final int lineNummer) {
-        if (getRegexp().matcher(cmt).find()) {
-            String oldTodo = todoIdentifier.getOldTodo(cmt);
-            if (oldTodo != null) {
-                // Sternchen für Javadoc Kommentare entfernen, schönere Ausgabe!
-                oldTodo = oldTodo.replace('*', ' ');
-                log(lineNummer, "found old" + oldTodo, new Object[] {getFormat()});
-            }
-        }
-    }
-
     /**
      * überprüft im Code die Kommentar, die als Javadoc vorliegen
      * 
@@ -103,6 +95,27 @@ public class TodoExpireCheck extends TodoCommentCheck {
                 }
             }
         }
+    }
+
+    private void checkOldComment(final TodoWithNameAndDateIdentifier todoIdentifier, final String cmt,
+            final int lineNummer) {
+        if (getRegexp().matcher(cmt).find()) {
+            final CheckResult result = todoIdentifier.getOldTodo(cmt);
+            switch (result) {
+                case DATE_TOO_OLD:
+                case NO_DATE:
+                    if (isMandatory()) {
+                        log(lineNummer, "date missing " + format(cmt), new Object[] {getFormat()});
+                    }
+                    break;
+                default: // ok
+            }
+        }
+    }
+
+    private String format(final String cmt) {
+        // Sternchen für Javadoc Kommentare entfernen, schönere Ausgabe!
+        return cmt.replace('*', ' ');
     }
 
     /**
@@ -131,5 +144,13 @@ public class TodoExpireCheck extends TodoCommentCheck {
 
     public void setDateformat(final String dateformat) {
         this.dateformat = dateformat;
+    }
+
+    public void setMandatory(final boolean mandatory) {
+        this.mandatory = mandatory;
+    }
+
+    public boolean isMandatory() {
+        return this.mandatory;
     }
 }

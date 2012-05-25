@@ -19,6 +19,10 @@ import java.util.StringTokenizer;
  */
 public class TodoWithNameAndDateIdentifier {
 
+    public enum CheckResult {
+        NO_DATE, DATE_OK, DATE_TOO_OLD
+    }
+
     private Calendar deadline = null;
     private String dateformat = null;
 
@@ -27,18 +31,22 @@ public class TodoWithNameAndDateIdentifier {
         this.dateformat = dateformat;
     }
 
-    public String getOldTodo(final String normal) {
+    public CheckResult getOldTodo(final String normal) {
 
         final StringTokenizer st = new StringTokenizer(normal, " ");
 
         while (st.hasMoreElements()) {
             final String nextToken = st.nextToken();
             final Calendar calendar = getCalendar(nextToken);
-            if (calendar != null && this.deadline.after(calendar)) {
-                return normal;
+            if (calendar != null) {
+                if (this.deadline.after(calendar)) {
+                    return CheckResult.DATE_TOO_OLD;
+                } else {
+                    return CheckResult.DATE_OK;
+                }
             }
         }
-        return null;
+        return CheckResult.NO_DATE;
     }
 
     private Calendar getCalendar(final String maybeDate) {
