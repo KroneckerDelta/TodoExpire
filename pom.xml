@@ -5,7 +5,7 @@
     <artifactId>TodoExpireCheck</artifactId>
     <name>Checked old todos</name>
     <packaging>jar</packaging>
-    <version>0.9</version>
+    <version>0.9.2</version>
     <build>
         <pluginManagement>
             <plugins>
@@ -17,6 +17,30 @@
                         <source>1.5</source>
                         <target>1.5</target>
                         <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.1</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addDefaultImplementationEntries>false</addDefaultImplementationEntries>
+                                <addDefaultSpecificationEntries>false</addDefaultSpecificationEntries>
+                            </manifest>
+                            <manifestEntries>
+                                <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+                                <Bundle-Name>eclipse-cs Extension Sample Plugin</Bundle-Name>
+                                <Bundle-SymbolicName>net.sf.eclipsecs.sample;singleton:=trueSample</Bundle-SymbolicName>
+                                <Bundle-Version>5.5.1.qualifier</Bundle-Version>
+                                <Require-Bundle>net.sf.eclipsecs.checkstyle, net.sf.eclipsecs.core, net.sf.eclipsecs.ui</Require-Bundle>
+                                <Bundle-RequiredExecutionEnvironment>J2SE-1.5</Bundle-RequiredExecutionEnvironment>
+                                <Eclipse-LazyStart>true</Eclipse-LazyStart>
+                                <Eclipse-RegisterBuddy>net.sf.eclipsecs.core</Eclipse-RegisterBuddy>
+                                <Bundle-Vendor>http://eclipse-cs.sf.net/</Bundle-Vendor>
+                            </manifestEntries>
+                        </archive>
                     </configuration>
                 </plugin>
             </plugins>
