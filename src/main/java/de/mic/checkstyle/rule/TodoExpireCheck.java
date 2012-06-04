@@ -103,6 +103,10 @@ public class TodoExpireCheck extends TodoCommentCheck {
             final CheckResult result = todoIdentifier.getOldTodo(cmt);
             switch (result) {
                 case DATE_TOO_OLD:
+                    // Sternchen für Javadoc Kommentare entfernen, schönere Ausgabe!
+                    final String oldComment = cmt.replace('*', ' ');
+                    log(lineNummer, "found old" + oldComment, new Object[] {getFormat()});
+                    break;
                 case NO_DATE:
                     if (isMandatory()) {
                         log(lineNummer, "date missing " + format(cmt), new Object[] {getFormat()});
