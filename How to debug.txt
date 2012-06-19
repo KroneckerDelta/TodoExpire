@@ -1,0 +1,10 @@
+In Eclipse unter Run Konfiguration die Main-Class einstellen:
+
+com.puppycrawl.tools.checkstyle.Main
+
+
+##############################
+
+Unter Arguments das Configfile hinzufügen und welche Klasse geprüft werden soll.
+
+-c conf\CommentRule.xml -r src\main\java\de\fehler\ProduktivFehler.java
