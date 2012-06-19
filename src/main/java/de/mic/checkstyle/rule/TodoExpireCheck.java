@@ -37,7 +37,7 @@ import de.mic.checkstyle.rule.TodoWithNameAndDateIdentifier.CheckResult;
 public class TodoExpireCheck extends TodoCommentCheck {
 
     private int days = 180;
-    private String dateformat = "dd.mm.yyyy";
+    private String dateformat = "dd.MM.yyyy";
     private boolean mandatory = false;
 
     public TodoExpireCheck() {

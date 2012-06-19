@@ -19,54 +19,58 @@ import java.util.StringTokenizer;
  */
 public class TodoWithNameAndDateIdentifier {
 
-    public enum CheckResult {
-        NO_DATE, DATE_OK, DATE_TOO_OLD
-    }
+	public enum CheckResult {
+		NO_DATE, DATE_OK, DATE_TOO_OLD
+	}
 
-    private Calendar deadline = null;
-    private String dateformat = null;
+	private Calendar deadline = null;
+	private String dateformat = null;
 
-    public TodoWithNameAndDateIdentifier(final Calendar deadline, final String dateformat) {
-        this.deadline = deadline;
-        this.dateformat = dateformat;
-    }
+	public TodoWithNameAndDateIdentifier(final Calendar deadline,
+			final String dateformat) {
+		this.deadline = deadline;
+		this.dateformat = dateformat;
+	}
 
-    public CheckResult getOldTodo(final String normal) {
+	public CheckResult getOldTodo(final String normal) {
 
-        final StringTokenizer st = new StringTokenizer(normal, " ");
+		final StringTokenizer st = new StringTokenizer(normal, " ");
 
-        while (st.hasMoreElements()) {
-            final String nextToken = st.nextToken();
-            final Calendar calendar = getCalendar(nextToken);
-            if (calendar != null) {
-                if (this.deadline.after(calendar)) {
-                    return CheckResult.DATE_TOO_OLD;
-                } else {
-                    return CheckResult.DATE_OK;
-                }
-            }
-        }
-        return CheckResult.NO_DATE;
-    }
+		while (st.hasMoreElements()) {
+			final String nextToken = st.nextToken();
+			final Calendar calendar = getCalendar(nextToken);
+			if (calendar != null) {
+				if (this.deadline.after(calendar)) {
+					return CheckResult.DATE_TOO_OLD;
+				} else {
+					return CheckResult.DATE_OK;
+				}
+			}
+		}
+		return CheckResult.NO_DATE;
+	}
 
-    private Calendar getCalendar(final String maybeDate) {
+	protected Calendar getCalendar(final String maybeDate) {
 
-        if (maybeDate == null) {
-            return null;
-        }
-        final DateFormat df = new SimpleDateFormat(this.dateformat);
-        df.setLenient(true);
-        Date parse;
-        try {
-            parse = df.parse(maybeDate);
-            final GregorianCalendar gregorianCalendar = new GregorianCalendar();
-            gregorianCalendar.setTime(parse);
-            // Monat beginnt mit 0, daher wird "falsch" geparst.
-            gregorianCalendar.add(Calendar.MONTH, -1);
-            return gregorianCalendar;
-        } catch (final ParseException e) {
+		if (maybeDate == null) {
+			return null;
+		}
+		final DateFormat df = new SimpleDateFormat(this.dateformat);
+		df.setLenient(true);
+		Date parse;
+		try {
+			parse = df.parse(maybeDate);
+			final GregorianCalendar gregorianCalendar = new GregorianCalendar();
+			gregorianCalendar.setTime(parse);
+			return gregorianCalendar;
+		} catch (final ParseException e) {
 
-            return null;
-        }
-    }
+			return null;
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "Deadline: " + this.deadline.getTime() + " Format: " +this.dateformat;
+	}
 }
